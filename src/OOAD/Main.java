@@ -73,16 +73,21 @@ class BugsCreator extends GameBoard{
 
 class Game{
     public int[][] backBoard =  new int[20][20];
+    private int[][] deathBoard = new int[20][20];
     private Ants a =new Ants();
     private Bugs b = new Bugs();
-
+    private Random random = new Random();
+    private static int tempX = 0;
+    private static int tempY = 0;
+    private static int round = 0;
     Game(){
         for(int k = 0; k < 20; k++){
             for (int j = 0; j < 20 ; j++) {
                 backBoard[j][k] = 0;
+                deathBoard[j][k]= 0;
             }
         }
-        Random random = new Random();
+
         for (int noOfAnts = 0; noOfAnts < 100; noOfAnts++){
             int x = random.nextInt(20);
             int y = random.nextInt(20);
@@ -103,8 +108,75 @@ class Game{
         }
 
     }
-    Game(int x, int y){
-        boolean validMove = new a.movement(x,y);
+    Game(int current_x, int current_y, int next_x, int next_y) {
+        //bugs movement from user
+        if(backBoard[current_x][current_y] == 2) { // bugs
+            boolean validMove = b.movement(current_x,current_y,next_x,next_y,backBoard);
+            if (validMove){
+                backBoard[current_x][current_y] = 0;
+                backBoard[next_x][next_y] = 2;
+            }
+        }
+
+        //ants auto movement (not done)
+        for(int y = 0; y < 20; y++){
+            for (int x = 0 ; x < 20; x++){
+                if (backBoard[x][y] == 1) { //ants
+                    int nextAnt_x = random.nextInt(2);
+                    int nextAnt_y = random.nextInt(2);
+                    boolean validMove = a.movement(x, y, nextAnt_x, nextAnt_y, backBoard);// need to change the next_x and next_y to random
+                    if (validMove) {
+                        backBoard[x][y] = 0;
+                        backBoard[nextAnt_x][nextAnt_y] = 1;
+                    }
+                }
+            }
+        }
+
+        //ants breed
+        if (round % 3 == 0){
+            for(int y = 0; y < 20 ;y++){
+                for(int x = 0; x < 20; x++){
+                    if (backBoard[x][y] == 1){
+                        boolean validbreed = a.breed(round,x,y,backBoard);
+                        if(validbreed){
+                            backBoard[tempX][tempY] = 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        // bugs breed
+        if (round % 8 == 0){
+            for(int y = 0; y < 20 ;y++){
+                for(int x = 0; x < 20; x++){
+                    if( backBoard[x][y] == 2){
+                        boolean validbreed = b.breed(round,x,y,backBoard);
+                        if(validbreed){
+                            backBoard[tempX][tempY] = 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        //bugs death counter
+        for(int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                if (deathBoard[x][y] == 3){
+                    backBoard[x][y] = 0;
+                    deathBoard[x][y] = 0;
+                }
+            }
+        }
+
+    }
+
+    // get the breed location after checking validity
+    public static void getLocation(int x, int y){
+        tempX = x;
+        tempY = y;
     }
 
 }
@@ -113,25 +185,25 @@ interface Oraganism {
     //create data
 
     // create functions for implement
-    public boolean movement(int x, int y);
-    public boolean breed(int counter);
-    public boolean death(int counter);
-    public int stepCounter();
+    boolean movement(int current_x, int current_y, int next_x, int next_y, int[][] backBoard);
+    boolean breed(int counter, int current_x, int current_y, int[][] backBoard);
+    boolean death(int counter);
+    int stepCounter();
 }
 
 class Ants implements Oraganism{
-
-    public boolean movement(int x, int y) {
-        if ( backBoard [x-1][y] == null){
+    // the is the step valid or not
+    public boolean movement(int current_x, int current_y, int next_x, int next_y, int[][] backBoard) {
+        if ( backBoard [current_x-1][current_y] == 0 && current_x -1 == next_x && current_y == next_y){
             return true;
         }
-        else if ( backBoard [x+1][y] == null){
+        else if ( backBoard [current_x+1][current_y] == 0 && current_x + 1 == next_x && current_y == next_y){
             return true;
         }
-        else if ( backBoard [x][y-1] == null){
+        else if ( backBoard [current_x][current_y-1] == 0 && current_x == next_x && current_y-1 == next_y){
             return true;
         }
-        else if ( backBoard [x][y+1] == null){
+        else if ( backBoard [current_x][current_y+1] == 0 && current_x == next_x && current_y+1 == next_y){
             return true;
         }
         else
@@ -139,17 +211,21 @@ class Ants implements Oraganism{
     }
 
     @Override
-    public boolean breed(int counter) {
-        if ( backBoard [x-1][y-1] == null){
+    public boolean breed(int counter, int current_x, int current_y, int[][] backBoard) {
+        if ( backBoard [current_x-1][current_y-1] == 0){
+            Game.getLocation(current_x-1,current_y-1);
             return true;
         }
-        else if ( backBoard [x+1][y+1] == null){
+        else if ( backBoard [current_x+1][current_y+1] == 0){
+            Game.getLocation(current_x+1,current_y+1);
             return true;
         }
-        else if ( backBoard [x+1][y-1] == null){
+        else if ( backBoard [current_x+1][current_y-1] == 0){
+            Game.getLocation(current_x+1,current_y-1);
             return true;
         }
-        else if ( backBoard [x-1][y+1] == null){
+        else if ( backBoard [current_x-1][current_y+1] == 0){
+            Game.getLocation(current_x-1,current_y+1);
             return true;
         }
         else
@@ -170,17 +246,33 @@ class Ants implements Oraganism{
 class Bugs implements Oraganism{
 
     @Override
-    public boolean movement(int x, int y) {
-        if ( backBoard [x-1][y] == null){
+    public boolean movement(int current_x, int current_y, int next_x, int next_y, int[][] backBoard) {
+        if ( backBoard [current_x-1][current_y] != 0 && current_x -1 == next_x && current_y == next_y){
+            if(backBoard [current_x-1][current_y] == 1){
+                //death counter reset; deathBoard [current_x][current_y] = 0; deathBoard[next_x][next_y] = 0;
+            }
+            //death counter continue; else deathBoard[next_x][next_y] = deathBoard [current_x][current_y] ; deathBoard [current_x][current_y] = 0;
             return true;
         }
-        else if ( backBoard [x+1][y] == null){
+        else if ( backBoard [current_x+1][current_y] != 0 && current_x + 1 == next_x && current_y == next_y){
+            if(backBoard [current_x+1][current_y] == 1){
+                //death counter reset; deathBoard [current_x][current_y] = 0; deathBoard[next_x][next_y] = 0;
+            }
+            //death counter continue; else  deathBoard[next_x][next_y] = deathBoard [current_x][current_y] ; deathBoard [current_x][current_y] = 0;
             return true;
         }
-        else if ( backBoard [x][y-1] == null){
+        else if ( backBoard [current_x][current_y-1] != 0 && current_x == next_x && current_y-1 == next_y){
+            if(backBoard [current_x][current_y-1] == 1){
+                //death counter reset; deathBoard [current_x][current_y] = 0; deathBoard[next_x][next_y] = 0;
+            }
+            //death counter continue; deathBoard[next_x][next_y] = deathBoard [current_x][current_y] ; deathBoard [current_x][current_y] = 0;
             return true;
         }
-        else if ( backBoard [x][y+1] == null){
+        else if ( backBoard [current_x][current_y+1] == 0 && current_x == next_x && current_y+1 == next_y){
+            if(backBoard [current_x][current_y+1] == 1){
+                //death counter reset; deathBoard [current_x][current_y] = 0; deathBoard[next_x][next_y] = 0;
+            }
+            //death counter continue; deathBoard[next_x][next_y] = deathBoard [current_x][current_y] ; deathBoard [current_x][current_y] = 0;
             return true;
         }
         else
@@ -188,17 +280,21 @@ class Bugs implements Oraganism{
     }
 
     @Override
-    public boolean breed(int counter) {
-        if ( backBoard [x-1][y-1] == null){
+    public boolean breed(int counter, int current_x, int current_y , int[][] backBoard) {
+        if ( backBoard [current_x-1][current_y-1] == 0){
+            Game.getLocation(current_x-1,current_y-1);
             return true;
         }
-        else if ( backBoard [x+1][y+1] == null){
+        else if ( backBoard [current_x+1][current_y+1] == 0){
+            Game.getLocation(current_x+1,current_y+1);
             return true;
         }
-        else if ( backBoard [x+1][y-1] == null){
+        else if ( backBoard [current_x+1][current_y-1] == 0){
+            Game.getLocation(current_x+1,current_y-1);
             return true;
         }
-        else if ( backBoard [x-1][y+1] == null){
+        else if ( backBoard [current_x-1][current_y+1] == 0){
+            Game.getLocation(current_x-1,current_y+1);
             return true;
         }
         else
