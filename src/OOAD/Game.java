@@ -38,7 +38,9 @@ public class Game {
 
     public void gameFlow(int current_x, int current_y, int next_x, int next_y){
         round++;
-        while()
+        while(){
+
+        }
     }
     /*
       if (backBoard[current_x][current_y].checkMovement(current_x,current_y,next_x,next_y)){
