@@ -9,6 +9,7 @@ public class Game {
     private int round = 0;
     private int noOfBugs = 0;
     private int noOfAnts = 0;
+    public int hungryRound = 0;
 
     Game(){
         Random random = new Random();
@@ -34,27 +35,77 @@ public class Game {
         tempX = 0;
         tempY = 0;
         round = 0;
+        noOfAnts = 0;
+        noOfBugs = 0;
+        hungryRound = 0;
     }
 
     //for Odd Step
-    public void gameFlow(int current_x, int current_y, int next_x, int next_y){
+    public void gameFlow(){
         round++;
-        int touchedBugs = 0;
-        bugsCounter();
-        while(touchedBugs < noOfBugs){
-            if(bugs_notMove(current_x,current_y)){
-                if (backBoard[current_x][current_y].checkMovement(current_x,current_y,next_x,next_y)){
-                    move(current_x,current_y,next_x,next_y);
+        //bugs move
+        bugsCounter(); //update noOfBugs
+        int noOfMovedBugs = 0;
+        while(noOfMovedBugs < noOfBugs){
+            for(int y = 0; y < 20; y++){
+                for(int x = 0; x< 20; x++){
+                    Random random = new Random();
+                    int next_x = random.nextInt(2)-1;
+                    int next_y = random.nextInt(2)-1;
+                    if(bugs_notMove(x,y)){
+                        if(!(backBoard[x+next_x][y+next_y] instanceof Bugs)) {
+                            if(backBoard[x+next_x][y+next_y] == null){
+                                hungryRound++;
+                            }
+                            else {
+                                hungryRound = 0;
+                            }
+                            if (backBoard[x][y].checkMovement(x, y, x + next_x, y + next_y)) {
+                                move(x, y, x + next_x, y + next_y);
+                                noOfMovedBugs++;
+                            }
+                        }
+                    }
                 }
             }
         }
+
+        //AntsMove
+        AntsMove();
+
+        //check round & breed
+        if(round%3 == 0){
+            antBreeding();
+        }
+        if(round % 8 == 0){
+            bugBreeding();
+        }
+
+        //starve
+        for(int y = 0; y < 20; y++){
+            for(int x = 0; x< 20; x++) {
+                starve(x,y);
+            }
+        }
+
     }
-    /*
-        if (backBoard[current_x][current_y].checkMovement(current_x,current_y,next_x,next_y)){
-                        move(current_x,current_y,next_x,next_y);
-                    }
-    AntsMove();
-    */
+
+    /**************************************************************************/
+    //CATEGORY : STARVATION
+    //Starve
+    public void starve(int this_x, int this_y){
+        if(backBoard[this_x][this_y] instanceof Bugs)
+        {
+            if (((Bugs)backBoard[this_x][this_y]).isStarving(hungryRound)) {
+                backBoard[this_x][this_y] = null;
+            }
+        }
+
+    }
+
+    /**************************************************************************/
+
+    //CATEGORY : MOVE
 
     //check is it a not moved bug
     public boolean bugs_notMove(int this_x, int this_y){
@@ -63,22 +114,30 @@ public class Game {
             if (((Bugs)backBoard[this_x][this_y]).moved) {
                 return false;
             }
-            else
+            else{
+                ((Bugs)backBoard[this_x][this_y]).moved = true;
                 return true;
+            }
         }
         else
             return false;
 
     }
 
-    //Starve
-    public void starve(int this_x, int this_y){
-        if(backBoard[this_x][this_y] instanceof Bugs)
+    //check is it a not moved bug
+    public boolean ants_notMove(int this_x, int this_y){
+        if(backBoard[this_x][this_y] instanceof Ants)
         {
-            if (((Bugs)backBoard[this_x][this_y]).isStarving()) {
-                backBoard[this_x][this_y] = null;
+            if (((Ants)backBoard[this_x][this_y]).moved) {
+                return false;
+            }
+            else{
+                ((Ants)backBoard[this_x][this_y]).moved = true;
+                return true;
             }
         }
+        else
+            return false;
 
     }
 
@@ -105,18 +164,23 @@ public class Game {
     }
 
     //ants movement
-    public void AntsMove(){
-        Random random = new Random();
-        for(int y = 0; y < 20; y++){
-            for(int x = 0; x < 20 ; x++){
-                int xRan = 0;
-                int yRan = 0;
-                while (!(xRan != 0 && yRan == 0 || xRan == 0 && yRan != 0)) {
-                     xRan = random.nextInt(2) - 1;
-                     yRan = random.nextInt(2) - 1;
-                    if (backBoard[x][y] instanceof Ants) {
+    public void AntsMove() {
+        antsCounter();//update noOfAnts
+        int noOfMovedAnts = 0;
+        while (noOfMovedAnts < noOfAnts) {
 
-                        move(x,y,x+xRan,y+yRan);
+            for (int y = 0; y < 20; y++) {
+                for (int x = 0; x < 20; x++) {
+                    Random random = new Random();
+                    int next_x = random.nextInt(2) - 1;
+                    int next_y = random.nextInt(2) - 1;
+                    if (ants_notMove(x, y)) {
+                        if(backBoard[x+next_x][y+next_y] == null){
+                            if (backBoard[x][y].checkMovement(x, y, x + next_x, y + next_y)) {
+                                move(x, y, x + next_x, y + next_y);
+                                noOfMovedAnts++;
+                            }
+                        }
                     }
                 }
             }
@@ -129,6 +193,9 @@ public class Game {
         backBoard[current_x][current_y]= null;
     }
 
+
+    /**************************************************************************/
+    //CATEGORY : BREED
     //breed
     public void antsBreed(){
         backBoard[tempX][tempY] = new Ants();
@@ -142,6 +209,35 @@ public class Game {
         tempX = x;
         tempY = y;
     }
+
+    //for ant to breed
+    public void antBreeding(){
+        for(int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                if(backBoard[x][y] instanceof Ants){
+                    if(backBoard[x][y].checkBreed(x,y,backBoard)){
+                        antsBreed();
+                    }
+                }
+            }
+        }
+    }
+
+    //for bug to breed
+    public void bugBreeding(){
+        for(int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                if(backBoard[x][y] instanceof Bugs){
+                    if(backBoard[x][y].checkBreed(x,y,backBoard)){
+                        bugsBreed();
+                    }
+                }
+            }
+        }
+    }
+
+    /**************************************************************************/
+
     public static void main(String[] args){
         Game game = new Game();
         for(int k = 0; k < 20; k++){

@@ -39,7 +39,7 @@ public class GUI {
         btn[x][y].setBackground(Color.blue);
         frame.add(btn[x][y]);
         gameBoard.add(btn[x][y]);
-      //  btn[x][y].addActionListener(new MyActionListener());
+        btn[x][y].addActionListener(new MyActionListener());
       }
     }
     frame.add(topBoard,BorderLayout.NORTH);
@@ -52,6 +52,13 @@ public class GUI {
 
   public static void main(String[] args){
     new GUI();
+  }
+
+  private class MyActionListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
   }
 }
 
