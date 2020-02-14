@@ -3,11 +3,15 @@ package OOAD;
 public class Bugs extends Organism {
     //parameter
     public boolean newBreed = false;
+    public boolean moved = false;
     public int starveRound = 0;
     Bugs(){
         super.name = "Bugs";
     }
 
+    public void resetMoved(){
+        moved = false;
+    }
     @Override
     public boolean checkMovement(int current_x, int current_y, int next_x, int next_y) {
         if((current_x - next_x == 1 || current_x - next_x == -1) && current_y - next_y == 0) {
