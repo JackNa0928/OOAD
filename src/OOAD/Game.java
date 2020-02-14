@@ -42,7 +42,7 @@ public class Game {
         int touchedBugs = 0;
         bugsCounter();
         while(touchedBugs < noOfBugs){
-            if(movedBugs(current_x,current_y)){
+            if(bugs_notMove(current_x,current_y)){
                 if (backBoard[current_x][current_y].checkMovement(current_x,current_y,next_x,next_y)){
                     move(current_x,current_y,next_x,next_y);
                 }
@@ -56,16 +56,19 @@ public class Game {
     AntsMove();
     */
 
-    //check is it a moved bug
-    public boolean Bugs_notMove(int this_x, int this_y){
+    //check is it a not moved bug
+    public boolean bugs_notMove(int this_x, int this_y){
         if(backBoard[this_x][this_y] instanceof Bugs)
         {
             if (((Bugs)backBoard[this_x][this_y]).moved) {
                 return false;
             }
+            else
+                return true;
         }
         else
-            return true;
+            return false;
+
     }
 
     //Starve
