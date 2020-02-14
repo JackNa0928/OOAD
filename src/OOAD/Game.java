@@ -15,42 +15,41 @@ public class Game {
 
     //constructor
     Game(){
-        if(gui.startClicked) {
-            Random random = new Random();
-            for (int noOfAnts = 0; noOfAnts < 100; noOfAnts++) {
-                int x = random.nextInt(20);
-                int y = random.nextInt(20);
-                if (backBoard[x][y] != null) {
-                    noOfAnts--;
-                } else
-                    backBoard[x][y] = new Ants();
-            }
-            for (int noOfBugs = 0; noOfBugs < 5; noOfBugs++) {
-                int x = random.nextInt(20);
-                int y = random.nextInt(20);
-                if (backBoard[x][y] != null) {
-                    noOfBugs--;
-                } else {
-                    backBoard[x][y] = new Bugs();
-                }
-            }
-            tempX = 0;
-            tempY = 0;
-            round = 0;
-            noOfAnts = 0;
-            noOfBugs = 0;
-            hungryRound = 0;
-            game_End = false;
+        Random random = new Random();
+        for (int noOfAnts = 0; noOfAnts < 100; noOfAnts++) {
+            int x = random.nextInt(20);
+            int y = random.nextInt(20);
+            if (backBoard[x][y] != null) {
+                noOfAnts--;
+            } else
+                backBoard[x][y] = new Ants();
         }
+        for (int noOfBugs = 0; noOfBugs < 5; noOfBugs++) {
+            int x = random.nextInt(20);
+            int y = random.nextInt(20);
+            if (backBoard[x][y] != null) {
+                noOfBugs--;
+            } else {
+                backBoard[x][y] = new Bugs();
+            }
+        }
+        tempX = 0;
+        tempY = 0;
+        round = 0;
+        noOfAnts = 0;
+        noOfBugs = 0;
+        hungryRound = 0;
+        game_End = false;
+
+        // after start clicked in GUI call the Game() //constructor
+
+        /*
         while(gui.enterClicked || gui.startClicked){
             gameFlow();
             sendArray();
             //when GUI get the data then set ENTER CLICKED && START CLICKED to false in the end of action listener
         }
-        if(game_End){
-            gameEnd();
-        }
-
+        */
     }
 
     /**************************************************************************/
@@ -112,6 +111,7 @@ public class Game {
         }
         return false;
     }
+
     /**************************************************************************/
     //CATEGORY : STARVATION
     //Starve
@@ -265,6 +265,7 @@ public class Game {
     //send the 2d array GUI
     public void sendArray (){
         gui.getArray(backBoard);
+        //GUI need to have a function to get the array
     }
 
 
