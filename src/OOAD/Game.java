@@ -10,37 +10,52 @@ public class Game {
     private int noOfBugs = 0;
     private int noOfAnts = 0;
     public int hungryRound = 0;
+    private GUI gui = new GUI();
+    private boolean game_End = false;
 
+    //constructor
     Game(){
-        Random random = new Random();
-        for (int noOfAnts = 0; noOfAnts < 100; noOfAnts++){
-            int x = random.nextInt(20);
-            int y = random.nextInt(20);
-            if(backBoard[x][y] != null){
-                noOfAnts--;
+        if(gui.startClicked) {
+            Random random = new Random();
+            for (int noOfAnts = 0; noOfAnts < 100; noOfAnts++) {
+                int x = random.nextInt(20);
+                int y = random.nextInt(20);
+                if (backBoard[x][y] != null) {
+                    noOfAnts--;
+                } else
+                    backBoard[x][y] = new Ants();
             }
-            else
-                backBoard[x][y] = new Ants();
+            for (int noOfBugs = 0; noOfBugs < 5; noOfBugs++) {
+                int x = random.nextInt(20);
+                int y = random.nextInt(20);
+                if (backBoard[x][y] != null) {
+                    noOfBugs--;
+                } else {
+                    backBoard[x][y] = new Bugs();
+                }
+            }
+            tempX = 0;
+            tempY = 0;
+            round = 0;
+            noOfAnts = 0;
+            noOfBugs = 0;
+            hungryRound = 0;
+            game_End = false;
         }
-        for (int noOfBugs = 0; noOfBugs < 5; noOfBugs++){
-            int x = random.nextInt(20);
-            int y = random.nextInt(20);
-            if(backBoard[x][y] != null){
-                noOfBugs--;
-            }
-            else {
-                backBoard[x][y] = new Bugs();
-            }
+        while(gui.enterClicked || gui.startClicked){
+            gameFlow();
+            sendArray();
+            //when GUI get the data then set ENTER CLICKED && START CLICKED to false in the end of action listener
         }
-        tempX = 0;
-        tempY = 0;
-        round = 0;
-        noOfAnts = 0;
-        noOfBugs = 0;
-        hungryRound = 0;
+        if(game_End){
+            gameEnd();
+        }
+
     }
 
-    //for Odd Step
+    /**************************************************************************/
+
+    //Game Progress
     public void gameFlow(){
         round++;
         //bugs move
@@ -90,6 +105,13 @@ public class Game {
 
     }
 
+    //Game End
+    public boolean gameEnd(){
+        if(noOfBugs == 0 || noOfAnts ==0){
+            return true;
+        }
+        return false;
+    }
     /**************************************************************************/
     //CATEGORY : STARVATION
     //Starve
@@ -238,6 +260,16 @@ public class Game {
 
     /**************************************************************************/
 
+
+    //CATEGORY : CONNECTOR
+    //send the 2d array GUI
+    public void sendArray (){
+        gui.getArray(backBoard);
+    }
+
+
+
+    /**************************************************************************/
     public static void main(String[] args){
         Game game = new Game();
         for(int k = 0; k < 20; k++){
