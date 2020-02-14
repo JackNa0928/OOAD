@@ -36,18 +36,37 @@ public class Game {
         round = 0;
     }
 
+    //for Odd Step
     public void gameFlow(int current_x, int current_y, int next_x, int next_y){
         round++;
-        while(){
-
+        int touchedBugs = 0;
+        bugsCounter();
+        while(touchedBugs < noOfBugs){
+            if(movedBugs(current_x,current_y)){
+                if (backBoard[current_x][current_y].checkMovement(current_x,current_y,next_x,next_y)){
+                    move(current_x,current_y,next_x,next_y);
+                }
+            }
         }
     }
     /*
-      if (backBoard[current_x][current_y].checkMovement(current_x,current_y,next_x,next_y)){
-        move(current_x,current_y,next_x,next_y);
-    }
+        if (backBoard[current_x][current_y].checkMovement(current_x,current_y,next_x,next_y)){
+                        move(current_x,current_y,next_x,next_y);
+                    }
     AntsMove();
     */
+
+    //check is it a moved bug
+    public boolean Bugs_notMove(int this_x, int this_y){
+        if(backBoard[this_x][this_y] instanceof Bugs)
+        {
+            if (((Bugs)backBoard[this_x][this_y]).moved) {
+                return false;
+            }
+        }
+        else
+            return true;
+    }
 
     //Starve
     public void starve(int this_x, int this_y){
@@ -109,10 +128,10 @@ public class Game {
 
     //breed
     public void antsBreed(){
-        backBoard[tempX][tempX] = new Ants();
+        backBoard[tempX][tempY] = new Ants();
     }
     public void bugsBreed(){
-        backBoard[tempX][tempX] = new Bugs();
+        backBoard[tempX][tempY] = new Bugs();
     }
 
     //get location
