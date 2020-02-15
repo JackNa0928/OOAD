@@ -20,19 +20,19 @@ public class Ants extends Organism {
 
     @Override
     public boolean checkBreed(int current_x, int current_y, Organism[][] backBoard) { //well u know it alr bound check
-        if ( backBoard [current_x][current_y-1] == null){
+        if (backBoard[current_x][current_y - 1] == null && (current_y - 1) > 0){
             Game.getLocation(current_x,current_y-1);
             return true;
         }
-        else if ( backBoard [current_x][current_y+1] == null){
+        else if (backBoard[current_x][current_y + 1] == null && (current_y + 1) < 20){
             Game.getLocation(current_x,current_y+1);
             return true;
         }
-        else if ( backBoard [current_x+1][current_y] == null){
+        else if (backBoard[current_x + 1][current_y] == null && (current_x + 1) < 20){
             Game.getLocation(current_x+1,current_y);
             return true;
         }
-        else if ( backBoard [current_x-1][current_y] == null){
+        else if ( backBoard [current_x-1][current_y] == null && (current_x - 1 )> 0){
             Game.getLocation(current_x-1,current_y);
             return true;
         }

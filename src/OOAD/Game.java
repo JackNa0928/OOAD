@@ -218,7 +218,8 @@ public class Game {
     //CATEGORY : BREED
     //breed
     public void antsBreed(){
-        backBoard[tempX][tempY] = new Ants();
+        Ants temp = new Ants();
+        backBoard[tempX][tempY] = temp;
     }
     public void bugsBreed(){
         backBoard[tempX][tempY] = new Bugs();
