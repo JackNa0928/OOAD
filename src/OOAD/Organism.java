@@ -7,8 +7,8 @@ public abstract class Organism {
     public boolean checkMovement(int current_x, int current_y, int next_x, int next_y){
         return false;
     }
-    public boolean checkBreed(int current_x, int current_y, Organism[][] backBoard){
-        return false;
+    public Location checkBreed(int current_x, int current_y, Organism[][] backBoard){
+        return null;
     }
     public boolean death(int counter){
         return false;

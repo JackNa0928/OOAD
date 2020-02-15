@@ -61,15 +61,15 @@ public class Connector {
     ActionListener enterBtnKeyListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("first row in enter button actionlistener");
+            //System.out.println("first row in enter button actionlistener");
 
             //if (e.getKeyCode()==KeyEvent.VK_ENTER){
-                System.out.println("first row in enter button actionlistener");
+            //    System.out.println("first row in enter button actionlistener");
              //   gui.entBtn.doClick();
                 gui.counter++;
                 game.gameFlow();
                 getArray(game.backBoard);
-            System.out.println("last row in enter button actionlistener");
+          //  System.out.println("last row in enter button actionlistener");
                 for(int y=0;y<20;y++){
                     for(int x=0;x<20;x++){
                         gui.btn[x][y]= new JLabel();
@@ -81,13 +81,13 @@ public class Connector {
         }
     };  //get 2d array and set Icon
     public void getArray(Organism[][] backBoard){
-        System.out.println("getArray first line");
+        //System.out.println("getArray first line");
         for (int y = 0; y < 20; y++){
             for(int x = 0; x < 20; x++){
-                System.out.println("getArray inside loop");
+                //System.out.println("getArray inside loop");
                 if(backBoard[x][y]  == null ){
                     gui.btn[x][y].setIcon(null);
-                    System.out.println("null Icon Set");
+                   // System.out.println("null Icon Set");
                 }
                 else if(backBoard[x][y] instanceof Ants){
                     try {
@@ -97,7 +97,7 @@ public class Connector {
                         System.out.println(ex);
                     }
                     //gui.btn[x][y].setIcon(ant);
-                    System.out.println("ant Icon Set");
+                    //System.out.println("ant Icon Set");
                 }
                 else{
                     try {
@@ -107,7 +107,7 @@ public class Connector {
                         System.out.println(ex);
                     }
                     //gui.btn[x][y].setIcon(bug);
-                    System.out.println("bug Icon Set");
+                    //System.out.println("bug Icon Set");
                 }
             }
         }
