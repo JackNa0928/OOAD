@@ -46,8 +46,7 @@ public class Bugs extends Organism {
     }
 
 
-    public boolean isStarving(int round) {
-        starveRound = round;
+    public boolean isStarving() {
         if(starveRound == 3){
             return true;
         }

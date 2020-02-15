@@ -1,6 +1,6 @@
 package OOAD;
 
-public class Organism {
+public abstract class Organism {
     public String name;
 
     public boolean checkMovement(int current_x, int current_y, int next_x, int next_y){

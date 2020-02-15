@@ -9,9 +9,9 @@ public class Game {
     private int round = 0;
     private int noOfBugs = 0;
     private int noOfAnts = 0;
-    public int hungryRound = 0;
     private GUI gui;
     private boolean game_End = false;
+    private Random random = new Random();
 
     //constructor
     Game(){
@@ -38,7 +38,6 @@ public class Game {
         round = 0;
         noOfAnts = 0;
         noOfBugs = 0;
-        hungryRound = 0;
         game_End = false;
 
         // after start clicked in GUI call the Game() //constructor
@@ -51,26 +50,20 @@ public class Game {
     public void gameFlow(){
         round++;
         //bugs move
-        bugsCounter(); //update noOfBugs
+        //bugsCounter(); //update noOfBugs
         int noOfMovedBugs = 0;
         while(noOfMovedBugs < noOfBugs){
             for(int y = 0; y < 20; y++){
                 for(int x = 0; x< 20; x++){
-                    Random random = new Random();
-                    int next_x = random.nextInt(2)-1;
-                    int next_y = random.nextInt(2)-1;
-                    if(bugs_notMove(x,y)){
-                        if(!(backBoard[x+next_x][y+next_y] instanceof Bugs)) {
-                            if(backBoard[x+next_x][y+next_y] == null){
-                                hungryRound++;
-                            }
-                            else {
-                                hungryRound = 0;
-                            }
-                            if (backBoard[x][y].checkMovement(x, y, x + next_x, y + next_y)) {
-                                move(x, y, x + next_x, y + next_y);
-                                noOfMovedBugs++;
-                            }
+                    if(!((Bugs) backBoard[x][y]).moved){
+                        checkPrey(x,y);
+                        if (backBoard[x][y].checkMovement(x, y, tempX, tempY)) {
+                            move(x, y, tempX, tempY);
+                            noOfMovedBugs++;
+                        }
+                        else{
+                            move(x,y,x,y);
+                            noOfMovedBugs++;
                         }
                     }
                 }
@@ -111,7 +104,7 @@ public class Game {
     public void starve(int this_x, int this_y){
         if(backBoard[this_x][this_y] instanceof Bugs)
         {
-            if (((Bugs)backBoard[this_x][this_y]).isStarving(hungryRound)) {
+            if (((Bugs)backBoard[this_x][this_y]).isStarving()) {
                 backBoard[this_x][this_y] = null;
             }
         }
@@ -154,6 +147,41 @@ public class Game {
         else
             return false;
 
+    }
+
+    //check for ants
+    public void checkPrey(int x,int y){
+        if(backBoard[x+1][y] instanceof Ants){
+            tempX = x+1;
+            tempY = y;
+            ((Bugs)backBoard[x][y]).starveRound = 0;
+        }
+        else if(backBoard[x-1][y] instanceof Ants){
+            tempX = x-1;
+            tempY = y;
+            ((Bugs)backBoard[x][y]).starveRound = 0;
+        }
+        else if(backBoard[x][y+1] instanceof Ants){
+            tempX = x;
+            tempY = y+1;
+            ((Bugs)backBoard[x][y]).starveRound = 0;
+        }
+        else if(backBoard[x][y-1] instanceof Ants){
+            tempX = x;
+            tempY = y-1;
+            ((Bugs)backBoard[x][y]).starveRound = 0;
+        }
+        else{
+            tempX = x+random.nextInt(2)-1;
+            tempY = y+random.nextInt(2)-1;
+            if(backBoard[tempY][tempY] == null) {
+                ((Bugs)backBoard[x][y]).starveRound++;
+            }
+            else{
+                tempX = x;
+                tempY = y;
+            }
+        }
     }
 
     //Ants counter
@@ -231,6 +259,7 @@ public class Game {
             for (int x = 0; x < 20; x++) {
                 if(backBoard[x][y] instanceof Ants){
                     if(backBoard[x][y].checkBreed(x,y,backBoard)){
+                        noOfAnts++;
                         antsBreed();
                     }
                 }
@@ -244,6 +273,7 @@ public class Game {
             for (int x = 0; x < 20; x++) {
                 if(backBoard[x][y] instanceof Bugs){
                     if(backBoard[x][y].checkBreed(x,y,backBoard)){
+                        noOfBugs++;
                         bugsBreed();
                     }
                 }
