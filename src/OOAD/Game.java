@@ -110,6 +110,7 @@ public class Game {
             if (((Bugs)backBoard[this_x][this_y]).isStarving()) {
                 backBoard[this_x][this_y] = null;
                 noOfBugs--;
+                System.out.println("Bug is dead");
             }
         }
 
@@ -170,6 +171,7 @@ public class Game {
                 ((Bugs) backBoard[tempX][tempY]).moved = true;
             }
             else{
+                ((Bugs)backBoard[x][y]).starveRound++;
             }
         }
 
