@@ -127,6 +127,7 @@ public class Game {
                 tempX = x+1;
                 tempY = y;
                 ((Bugs)backBoard[x][y]).starveRound = 0;
+                System.out.println("Bugs eat down");
                 move(x,y,tempX,tempY);
                 ((Bugs) backBoard[tempX][tempY]).moved = true;
                 noOfAnts--;
@@ -137,6 +138,7 @@ public class Game {
                 tempX = x-1;
                 tempY = y;
                 ((Bugs)backBoard[x][y]).starveRound = 0;
+                System.out.println("Bugs eat up");
                 move(x,y,tempX,tempY);
                 ((Bugs) backBoard[tempX][tempY]).moved = true;
                 noOfAnts--;
@@ -147,6 +149,7 @@ public class Game {
                 tempX = x;
                 tempY = y + 1;
                 ((Bugs) backBoard[x][y]).starveRound = 0;
+                System.out.println("Bugs eat right");
                 move(x,y,tempX,tempY);
                 ((Bugs) backBoard[tempX][tempY]).moved = true;
                 noOfAnts--;
@@ -157,6 +160,7 @@ public class Game {
                 tempX = x;
                 tempY = y - 1;
                 ((Bugs) backBoard[x][y]).starveRound = 0;
+                 System.out.println("Bugs eat left");
                  move(x,y,tempX,tempY);
                  ((Bugs) backBoard[tempX][tempY]).moved = true;
                 noOfAnts--;
@@ -167,10 +171,12 @@ public class Game {
             tempY = y+random.nextInt(2)-1;
             if(backBoard[tempY][tempY] == null) {
                 ((Bugs)backBoard[x][y]).starveRound++;
+                System.out.println("bug moved to null");
                 move(x,y,tempX,tempY);
                 ((Bugs) backBoard[tempX][tempY]).moved = true;
             }
             else{
+                System.out.println("Bugs stay same place");
                 ((Bugs)backBoard[x][y]).starveRound++;
             }
         }
