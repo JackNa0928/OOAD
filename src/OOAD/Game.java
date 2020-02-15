@@ -10,7 +10,7 @@ public class Game {
     private int noOfBugs = 0;
     private int noOfAnts = 0;
     public int hungryRound = 0;
-    private GUI gui = new GUI();
+    private GUI gui;
     private boolean game_End = false;
 
     //constructor
@@ -43,13 +43,6 @@ public class Game {
 
         // after start clicked in GUI call the Game() //constructor
 
-        /*
-        while(gui.enterClicked || gui.startClicked){
-            gameFlow();
-            sendArray();
-            //when GUI get the data then set ENTER CLICKED && START CLICKED to false in the end of action listener
-        }
-        */
     }
 
     /**************************************************************************/
@@ -271,7 +264,7 @@ public class Game {
 
 
     /**************************************************************************/
-    public static void main(String[] args){
+    /*public static void main(String[] args){
         Game game = new Game();
         for(int k = 0; k < 20; k++){
             for (int j = 0; j < 20 ; j++) {
@@ -283,6 +276,6 @@ public class Game {
             }
             System.out.print("\n");
         }
-    }
+    }*/
 }
 

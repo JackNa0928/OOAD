@@ -55,8 +55,9 @@ public class Bugs extends Organism {
            return false;
     }
 
+    /*
     public static void main(String[] args){
         Bugs bugs = new Bugs();
         System.out.println(bugs.checkMovement(0,0,1,1));
-    }
+    }*/
 }

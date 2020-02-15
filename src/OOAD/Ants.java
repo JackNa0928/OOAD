@@ -45,8 +45,11 @@ public class Ants extends Organism {
         return false;
     }
 
+    /*
     public static void main(String[] args){
         Ants ants = new Ants();
         System.out.println(ants.checkMovement(0,0,1,1));
     }
+
+     */
 }
