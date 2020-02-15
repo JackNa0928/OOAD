@@ -19,21 +19,21 @@ public class Ants extends Organism {
     }
 
     @Override
-    public boolean checkBreed(int current_x, int current_y, Organism[][] backBoard) {
-        if ( backBoard [current_x-1][current_y-1] == null){
-            Game.getLocation(current_x-1,current_y-1);
+    public boolean checkBreed(int current_x, int current_y, Organism[][] backBoard) { //well u know it alr bound check
+        if ( backBoard [current_x][current_y-1] == null){
+            Game.getLocation(current_x,current_y-1);
             return true;
         }
-        else if ( backBoard [current_x+1][current_y+1] == null){
-            Game.getLocation(current_x+1,current_y+1);
+        else if ( backBoard [current_x][current_y+1] == null){
+            Game.getLocation(current_x,current_y+1);
             return true;
         }
-        else if ( backBoard [current_x+1][current_y-1] == null){
-            Game.getLocation(current_x+1,current_y-1);
+        else if ( backBoard [current_x+1][current_y] == null){
+            Game.getLocation(current_x+1,current_y);
             return true;
         }
-        else if ( backBoard [current_x-1][current_y+1] == null){
-            Game.getLocation(current_x-1,current_y+1);
+        else if ( backBoard [current_x-1][current_y] == null){
+            Game.getLocation(current_x-1,current_y);
             return true;
         }
         else

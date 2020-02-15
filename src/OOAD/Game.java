@@ -9,7 +9,7 @@ public class Game {
     private int round = 0;
     private int noOfBugs = 0;
     private int noOfAnts = 0;
-    private GUI gui;
+
     private boolean game_End = false;
     private Random random = new Random();
 
@@ -41,10 +41,6 @@ public class Game {
         round = 0;
         game_End = false;
 
-        //send array
-        assert false;
-        gui.getArray(backBoard);
-
         // after start clicked in GUI call the Game() //constructor
 
     }
@@ -59,17 +55,11 @@ public class Game {
         while(noOfMovedBugs < noOfBugs){
             for(int y = 0; y < 20; y++){
                 for(int x = 0; x< 20; x++){
-                    if(!((Bugs) backBoard[x][y]).moved){
-                        checkPrey(x,y);
-                        if (backBoard[x][y].checkMovement(x, y, tempX, tempY)) {
-                            move(x, y, tempX, tempY);
-                            ((Bugs) backBoard[tempX][tempY]).moved = true;
+                    if(backBoard[x][y] instanceof Bugs) {
+                        if (!((Bugs) backBoard[x][y]).moved) {
+                            checkPrey(x, y);
+                            noOfMovedBugs++;
                         }
-                        else{
-                            move(x,y,x,y);
-                            ((Bugs) backBoard[x][y]).moved = true;
-                        }
-                        noOfMovedBugs++;
                     }
                 }
             }
@@ -81,7 +71,9 @@ public class Game {
         //reset the Moved to false
         for(int y = 0; y < 20; y++){
             for(int x = 0; x< 20; x++){
-                backBoard[x][y].moved = false;
+                if (backBoard[x][y] !=null) {
+                    backBoard[x][y].moved = false;
+                }
             }
         }
 
@@ -99,9 +91,6 @@ public class Game {
                 starve(x,y);
             }
         }
-
-        //send array
-        gui.getArray(backBoard);
     }
 
     /**************************************************************************/
@@ -123,63 +112,94 @@ public class Game {
 
     //check for ants
     public void checkPrey(int x,int y){
-        if(backBoard[x+1][y] instanceof Ants){
-            tempX = x+1;
-            tempY = y;
-            ((Bugs)backBoard[x][y]).starveRound = 0;
-            noOfAnts--;
+        if(backBoard[x][y].checkMovement(x, y, x+1, y)){
+            if(backBoard[x+1][y] instanceof Ants){
+                tempX = x+1;
+                tempY = y;
+                ((Bugs)backBoard[x][y]).starveRound = 0;
+                move(x,y,tempX,tempY);
+                ((Bugs) backBoard[tempX][tempY]).moved = true;
+                noOfAnts--;
+            }
         }
-        else if(backBoard[x-1][y] instanceof Ants){
-            tempX = x-1;
-            tempY = y;
-            ((Bugs)backBoard[x][y]).starveRound = 0;
-            noOfAnts--;
+        else if(backBoard[x][y].checkMovement(x, y, x-1, y)){
+            if(backBoard[x-1][y] instanceof Ants){
+                tempX = x-1;
+                tempY = y;
+                ((Bugs)backBoard[x][y]).starveRound = 0;
+                move(x,y,tempX,tempY);
+                ((Bugs) backBoard[tempX][tempY]).moved = true;
+                noOfAnts--;
+            }
         }
-        else if(backBoard[x][y+1] instanceof Ants){
-            tempX = x;
-            tempY = y+1;
-            ((Bugs)backBoard[x][y]).starveRound = 0;
-            noOfAnts--;
+        else if(backBoard[x][y].checkMovement(x, y, x, y+1)) {
+            if (backBoard[x][y + 1] instanceof Ants) {
+                tempX = x;
+                tempY = y + 1;
+                ((Bugs) backBoard[x][y]).starveRound = 0;
+                move(x,y,tempX,tempY);
+                ((Bugs) backBoard[tempX][tempY]).moved = true;
+                noOfAnts--;
+            }
         }
-        else if(backBoard[x][y-1] instanceof Ants){
-            tempX = x;
-            tempY = y-1;
-            ((Bugs)backBoard[x][y]).starveRound = 0;
-            noOfAnts--;
+        else if(backBoard[x][y].checkMovement(x, y, x, y-1)) {
+             if (backBoard[x][y - 1] instanceof Ants) {
+                tempX = x;
+                tempY = y - 1;
+                ((Bugs) backBoard[x][y]).starveRound = 0;
+                 move(x,y,tempX,tempY);
+                 ((Bugs) backBoard[tempX][tempY]).moved = true;
+                noOfAnts--;
+            }
         }
-        else{
+        else if(backBoard[x][y].checkMovement(x, y, x+random.nextInt(2)-1, y+random.nextInt(2)-1)){
             tempX = x+random.nextInt(2)-1;
             tempY = y+random.nextInt(2)-1;
             if(backBoard[tempY][tempY] == null) {
                 ((Bugs)backBoard[x][y]).starveRound++;
+                move(x,y,tempX,tempY);
+                ((Bugs) backBoard[tempX][tempY]).moved = true;
             }
             else{
                 tempX = x;
                 tempY = y;
+                move(x,y,tempX,tempY);
             }
         }
+
     }
+
 
     //ants movement
     public void AntsMove() {
         int noOfMovedAnts = 0;
         while (noOfMovedAnts < noOfAnts) {
                 for(int y = 0; y < 20; y++){
-                    for(int x = 0; x< 20; x++){
-                        if(!((Ants) backBoard[x][y]).moved){
-                            tempX = x+random.nextInt(2)-1;
-                            tempY = y+random.nextInt(2)-1;
-                            if(backBoard[tempY][tempY] == null) {
+                    for(int x = 0; x< 20; x++) {
+                        if (backBoard[x][y] instanceof Ants) {
+                            if (!((Ants) backBoard[x][y]).moved) {
+                                tempX = x + random.nextInt(2) - 1;
+                                tempY = y + random.nextInt(2) - 1;
+
                                 if (backBoard[x][y].checkMovement(x, y, tempX, tempY)) {
-                                    move(x, y, tempX, tempY);
-                                    ((Ants) backBoard[tempX][tempY]).moved = true;
+                                    if (backBoard[tempY][tempY] == null) {
+
+                                            move(x, y, tempX, tempY);
+                                            ((Ants) backBoard[tempX][tempY]).moved = true;
+
+                                    } else {
+                                    try {
+                                        move(x, y, x, y);
+                                        ((Ants) backBoard[x][y]).moved = true;
+                                    }catch (Exception ex){
+                                        System.out.println(ex);
+                                    }
+                                    }
                                 }
+
+
+                                noOfMovedAnts++;
                             }
-                            else{
-                                move(x,y,x,y);
-                                ((Ants) backBoard[x][y]).moved = true;
-                            }
-                            noOfMovedAnts++;
                         }
                     }
                 }
