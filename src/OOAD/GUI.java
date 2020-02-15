@@ -15,7 +15,7 @@ public class GUI extends JFrame implements ActionListener,KeyListener{
 
 
 
-  private int Counter;
+  private int counter;
   boolean gameStarted = false;
   private Game game;
   private ImageIcon ant = new ImageIcon("ant.png");
@@ -35,6 +35,8 @@ public class GUI extends JFrame implements ActionListener,KeyListener{
     JButton startBtn = new JButton ("START"); //start btn
     startBtn.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e) {
+        counter = 0;
+        counter++;
         game.sendArray();
         startBtn.setEnabled(false);
         //enterKey.enabled(true);
@@ -43,7 +45,7 @@ public class GUI extends JFrame implements ActionListener,KeyListener{
     });
 
     JLabel label =new JLabel();
-    label.setText ( "    Round : "+ Counter );
+    label.setText ( "    Round : "+ counter );
     topBoard.add(startBtn, BorderLayout.WEST);
     topBoard.add(label, BorderLayout.CENTER);
 
@@ -78,7 +80,7 @@ public class GUI extends JFrame implements ActionListener,KeyListener{
   @Override
   public void keyTyped(KeyEvent e) {
     if (e.getKeyCode()==KeyEvent.VK_ENTER){
-
+        counter++;
       game.gameFlow();
       game.gameEnd();
       game.sendArray();
