@@ -2,6 +2,7 @@ package OOAD;
 
 public class Ants extends Organism {
     public boolean newBreed = false;
+    public boolean moved = false;
     Ants(){
         super.name = "Ants";
     }
@@ -18,7 +19,7 @@ public class Ants extends Organism {
     }
 
     @Override
-    public boolean checkBreed(int counter, int current_x, int current_y, Organism[][] backBoard) {
+    public boolean checkBreed(int current_x, int current_y, Organism[][] backBoard) {
         if ( backBoard [current_x-1][current_y-1] == null){
             Game.getLocation(current_x-1,current_y-1);
             return true;
@@ -44,8 +45,11 @@ public class Ants extends Organism {
         return false;
     }
 
+    /*
     public static void main(String[] args){
         Ants ants = new Ants();
         System.out.println(ants.checkMovement(0,0,1,1));
     }
+
+     */
 }

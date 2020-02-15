@@ -24,7 +24,7 @@ public class Bugs extends Organism {
     }
 
     @Override
-    public boolean checkBreed(int counter, int current_x, int current_y, Organism[][] backBoard) {
+    public boolean checkBreed(int current_x, int current_y, Organism[][] backBoard) {
         if ( backBoard [current_x-1][current_y-1] == null){
             Game.getLocation(current_x-1,current_y-1);
             return true;
@@ -54,8 +54,9 @@ public class Bugs extends Organism {
            return false;
     }
 
+    /*
     public static void main(String[] args){
         Bugs bugs = new Bugs();
         System.out.println(bugs.checkMovement(0,0,1,1));
-    }
+    }*/
 }
