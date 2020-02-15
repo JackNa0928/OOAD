@@ -89,6 +89,10 @@ public class Game {
             bugBreeding();
         }
         System.out.println("Breed done");
+
+        //reset Breed status
+        resetBreed();
+
         //starve
         for(int y = 0; y < 20; y++){
             for(int x = 0; x< 20; x++) {
@@ -105,6 +109,7 @@ public class Game {
         {
             if (((Bugs)backBoard[this_x][this_y]).isStarving()) {
                 backBoard[this_x][this_y] = null;
+                noOfBugs--;
             }
         }
 
@@ -214,9 +219,11 @@ public class Game {
     public void antsBreed(){
         Ants temp = new Ants();
         backBoard[tempX][tempY] = temp;
+        backBoard[tempX][tempY].newBreed = true;
     }
     public void bugsBreed(){
         backBoard[tempX][tempY] = new Bugs();
+        backBoard[tempX][tempY].newBreed = true;
     }
 
     //get location
@@ -230,11 +237,13 @@ public class Game {
         for(int y = 0; y < 20; y++) {
             for (int x = 0; x < 20; x++) {
                 if(backBoard[x][y] instanceof Ants){
-                    if(backBoard[x][y].checkBreed(x,y,backBoard) != null){
-                    	tempX = backBoard[x][y].checkBreed(x,y,backBoard).getCoor_x();
-                    	tempY = backBoard[x][y].checkBreed(x,y,backBoard).getCoor_y();
-                        noOfAnts++;
-                        antsBreed();
+                    if(!backBoard[x][y].newBreed) {
+                        if (backBoard[x][y].checkBreed(x, y, backBoard) != null) {
+                            tempX = backBoard[x][y].checkBreed(x, y, backBoard).getCoor_x();
+                            tempY = backBoard[x][y].checkBreed(x, y, backBoard).getCoor_y();
+                            noOfAnts++;
+                            antsBreed();
+                        }
                     }
                 }
             }
@@ -246,12 +255,24 @@ public class Game {
         for(int y = 0; y < 20; y++) {
             for (int x = 0; x < 20; x++) {
                 if(backBoard[x][y] instanceof Bugs){
-                	if(backBoard[x][y].checkBreed(x,y,backBoard) != null){
-                    	tempX = backBoard[x][y].checkBreed(x,y,backBoard).getCoor_x();
-                    	tempY = backBoard[x][y].checkBreed(x,y,backBoard).getCoor_y();
-                        noOfBugs++;
-                        bugsBreed();
+                    if(!backBoard[x][y].newBreed) {
+                        if (backBoard[x][y].checkBreed(x, y, backBoard) != null) {
+                            tempX = backBoard[x][y].checkBreed(x, y, backBoard).getCoor_x();
+                            tempY = backBoard[x][y].checkBreed(x, y, backBoard).getCoor_y();
+                            noOfBugs++;
+                            bugsBreed();
+                        }
                     }
+                }
+            }
+        }
+    }
+
+    public void resetBreed(){
+        for(int y = 0; y < 20; y++) {
+            for (int x = 0; x < 20; x++) {
+                if(backBoard[x][y] != null){
+                    backBoard[x][y].newBreed = false;
                 }
             }
         }
