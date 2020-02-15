@@ -16,29 +16,34 @@ public class Game {
     //constructor
     Game(){
         Random random = new Random();
-        for (int noOfAnts = 0; noOfAnts < 100; noOfAnts++) {
+        for (int i = 0; i < 100; i++) {
             int x = random.nextInt(20);
             int y = random.nextInt(20);
             if (backBoard[x][y] != null) {
-                noOfAnts--;
+                i--;
             } else
                 backBoard[x][y] = new Ants();
         }
-        for (int noOfBugs = 0; noOfBugs < 5; noOfBugs++) {
+        noOfAnts =100;
+        for (int i = 0; i < 5; i++) {
             int x = random.nextInt(20);
             int y = random.nextInt(20);
             if (backBoard[x][y] != null) {
-                noOfBugs--;
+                i--;
             } else {
                 backBoard[x][y] = new Bugs();
             }
         }
+        noOfBugs = 5;
+
         tempX = 0;
         tempY = 0;
         round = 0;
-        noOfAnts = 0;
-        noOfBugs = 0;
         game_End = false;
+
+        //send array
+        assert false;
+        gui.getArray(backBoard);
 
         // after start clicked in GUI call the Game() //constructor
 
@@ -50,7 +55,6 @@ public class Game {
     public void gameFlow(){
         round++;
         //bugs move
-        //bugsCounter(); //update noOfBugs
         int noOfMovedBugs = 0;
         while(noOfMovedBugs < noOfBugs){
             for(int y = 0; y < 20; y++){
@@ -96,14 +100,8 @@ public class Game {
             }
         }
 
-    }
-
-    //Game End
-    public boolean gameEnd(){
-        if(noOfBugs == 0 || noOfAnts ==0){
-            return true;
-        }
-        return false;
+        //send array
+        gui.getArray(backBoard);
     }
 
     /**************************************************************************/
@@ -129,21 +127,25 @@ public class Game {
             tempX = x+1;
             tempY = y;
             ((Bugs)backBoard[x][y]).starveRound = 0;
+            noOfAnts--;
         }
         else if(backBoard[x-1][y] instanceof Ants){
             tempX = x-1;
             tempY = y;
             ((Bugs)backBoard[x][y]).starveRound = 0;
+            noOfAnts--;
         }
         else if(backBoard[x][y+1] instanceof Ants){
             tempX = x;
             tempY = y+1;
             ((Bugs)backBoard[x][y]).starveRound = 0;
+            noOfAnts--;
         }
         else if(backBoard[x][y-1] instanceof Ants){
             tempX = x;
             tempY = y-1;
             ((Bugs)backBoard[x][y]).starveRound = 0;
+            noOfAnts--;
         }
         else{
             tempX = x+random.nextInt(2)-1;
@@ -158,31 +160,8 @@ public class Game {
         }
     }
 
-    //Ants counter
-    public void antsCounter(){
-        for(int y = 0; y < 20; y++) {
-            for (int x = 0; x < 20; x++) {
-                if(backBoard[x][y] instanceof Ants){
-                    noOfAnts++;
-                }
-            }
-        }
-    }
-
-    //Bugs Counter
-    public void bugsCounter(){
-        for(int y = 0; y < 20; y++) {
-            for (int x = 0; x < 20; x++) {
-                if(backBoard[x][y] instanceof Bugs){
-                    noOfBugs++;
-                }
-            }
-        }
-    }
-
     //ants movement
     public void AntsMove() {
-        antsCounter();//update noOfAnts
         int noOfMovedAnts = 0;
         while (noOfMovedAnts < noOfAnts) {
                 for(int y = 0; y < 20; y++){
@@ -265,7 +244,7 @@ public class Game {
     //CATEGORY : CONNECTOR
     //send the 2d array GUI
     public void sendArray (){
-        gui.getArray(backBoard);
+
         //GUI need to have a function to get the array
     }
 

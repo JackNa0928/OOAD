@@ -22,7 +22,6 @@ public class GUI extends JFrame implements ActionListener,KeyListener{
 
   public GUI(){
     super("ANT & BUGS");
-    game = new Game();
     //panel board
 
     TestBoard();
@@ -34,9 +33,10 @@ public class GUI extends JFrame implements ActionListener,KeyListener{
     JButton startBtn = new JButton ("START"); //start btn
     startBtn.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e) {
+        System.out.println("first row in start button actionlistener");
+        game = new Game();
         counter = 0;
         counter++;
-        game.sendArray();
         startBtn.setEnabled(false);
         //enterKey.enabled(true);
         gameStarted = true;
@@ -81,8 +81,7 @@ public class GUI extends JFrame implements ActionListener,KeyListener{
     if (e.getKeyCode()==KeyEvent.VK_ENTER){
         counter++;
       game.gameFlow();
-      game.gameEnd();
-      game.sendArray();
+      //game.sendArray();
 
     }
   }
@@ -99,8 +98,10 @@ public class GUI extends JFrame implements ActionListener,KeyListener{
 
   //get 2d array and set Icon
   public void getArray(Organism[][] backBoard){
+    System.out.println("getArray first line");
     for (int y = 0; y < 20; y++){
       for(int x = 0; x < 20; x++){
+        System.out.println("getArray inside loop");
         if(backBoard[x][y]  == null){
           btn[x][y].setIcon(null);
         }
