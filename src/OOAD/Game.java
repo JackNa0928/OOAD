@@ -59,12 +59,13 @@ public class Game {
                         checkPrey(x,y);
                         if (backBoard[x][y].checkMovement(x, y, tempX, tempY)) {
                             move(x, y, tempX, tempY);
-                            noOfMovedBugs++;
+                            ((Bugs) backBoard[tempX][tempY]).moved = true;
                         }
                         else{
                             move(x,y,x,y);
-                            noOfMovedBugs++;
+                            ((Bugs) backBoard[x][y]).moved = true;
                         }
+                        noOfMovedBugs++;
                     }
                 }
             }
@@ -72,6 +73,13 @@ public class Game {
 
         //AntsMove
         AntsMove();
+
+        //reset the Moved to false
+        for(int y = 0; y < 20; y++){
+            for(int x = 0; x< 20; x++){
+                backBoard[x][y].moved = false;
+            }
+        }
 
         //check round & breed
         if(round%3 == 0){
@@ -114,40 +122,6 @@ public class Game {
     /**************************************************************************/
 
     //CATEGORY : MOVE
-
-    //check is it a not moved bug
-    public boolean bugs_notMove(int this_x, int this_y){
-        if(backBoard[this_x][this_y] instanceof Bugs)
-        {
-            if (((Bugs)backBoard[this_x][this_y]).moved) {
-                return false;
-            }
-            else{
-                ((Bugs)backBoard[this_x][this_y]).moved = true;
-                return true;
-            }
-        }
-        else
-            return false;
-
-    }
-
-    //check is it a not moved bug
-    public boolean ants_notMove(int this_x, int this_y){
-        if(backBoard[this_x][this_y] instanceof Ants)
-        {
-            if (((Ants)backBoard[this_x][this_y]).moved) {
-                return false;
-            }
-            else{
-                ((Ants)backBoard[this_x][this_y]).moved = true;
-                return true;
-            }
-        }
-        else
-            return false;
-
-    }
 
     //check for ants
     public void checkPrey(int x,int y){
@@ -211,22 +185,26 @@ public class Game {
         antsCounter();//update noOfAnts
         int noOfMovedAnts = 0;
         while (noOfMovedAnts < noOfAnts) {
-
-            for (int y = 0; y < 20; y++) {
-                for (int x = 0; x < 20; x++) {
-                    Random random = new Random();
-                    int next_x = random.nextInt(2) - 1;
-                    int next_y = random.nextInt(2) - 1;
-                    if (ants_notMove(x, y)) {
-                        if(backBoard[x+next_x][y+next_y] == null){
-                            if (backBoard[x][y].checkMovement(x, y, x + next_x, y + next_y)) {
-                                move(x, y, x + next_x, y + next_y);
-                                noOfMovedAnts++;
+                for(int y = 0; y < 20; y++){
+                    for(int x = 0; x< 20; x++){
+                        if(!((Ants) backBoard[x][y]).moved){
+                            tempX = x+random.nextInt(2)-1;
+                            tempY = y+random.nextInt(2)-1;
+                            if(backBoard[tempY][tempY] == null) {
+                                if (backBoard[x][y].checkMovement(x, y, tempX, tempY)) {
+                                    move(x, y, tempX, tempY);
+                                    ((Ants) backBoard[tempX][tempY]).moved = true;
+                                }
                             }
+                            else{
+                                move(x,y,x,y);
+                                ((Ants) backBoard[x][y]).moved = true;
+                            }
+                            noOfMovedAnts++;
                         }
                     }
                 }
-            }
+
         }
     }
 

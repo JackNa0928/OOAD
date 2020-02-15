@@ -9,10 +9,10 @@ public class Ants extends Organism {
 
     @Override
     public boolean checkMovement(int current_x, int current_y, int next_x, int next_y) {
-        if((current_x - next_x == 1 || current_x - next_x == -1) && current_y - next_y == 0) {
+        if((current_x - next_x == 1 || current_x - next_x == -1) && current_y - next_y == 0 && next_x < 20 && next_x >= 0&& next_y < 20 && next_y >= 0) {
             return true;
         }
-        else if(current_x - next_x == 0 && (current_y - next_y == 1 || current_y - next_y == -1)){
+        else if(current_x - next_x == 0 && (current_y - next_y == 1 || current_y - next_y == -1) && next_x < 20 && next_x >= 0&& next_y < 20 && next_y >= 0){
             return true;
         }
         return false;
