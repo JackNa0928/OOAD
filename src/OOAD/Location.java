@@ -10,9 +10,6 @@ public class Location {
 		setCoor_y(y);
 	}
 	
-	public Location() {
-	}
-
 	public int getCoor_x() {
 		return coor_x;
 	}
