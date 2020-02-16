@@ -11,7 +11,7 @@ import java.awt.event.KeyListener;
 public class Connector {
 
     private GUI gui = new GUI();
-    private NewGame game = new NewGame();
+    private Game game = new Game();
     private ImageIcon ant = ant();
     private ImageIcon bug = bug();
     private ImageIcon ant(){
@@ -43,7 +43,7 @@ public class Connector {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("first row in start button actionlistener");
-            game = new NewGame();
+            game = new Game();
             gui.counter = 0;
             gui.counter++;
             gui.startBtn.setEnabled(false);
