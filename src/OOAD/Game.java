@@ -1,5 +1,6 @@
 package OOAD;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
@@ -9,6 +10,8 @@ public class Game {
     private int round = 0;
     private int noOfBugs = 0;
     private int noOfAnts = 0;
+    private ArrayList<Ants> antsArray = new ArrayList<Ants>();
+    private ArrayList<Bugs> bugsArray = new ArrayList<Bugs>();
 
     private boolean game_End = false;
     private Random random = new Random();
@@ -22,19 +25,22 @@ public class Game {
             if (backBoard[x][y] != null) {
                 i--;
             } else
-                backBoard[x][y] = new Ants();
+                noOfAnts++;
+            	backBoard[x][y] = new Ants("Ant"+noOfAnts);
+            	antsArray.add((Ants)backBoard[x][y]);
         }
-        noOfAnts =100;
         for (int i = 0; i < 5; i++) {
             int x = random.nextInt(20);
             int y = random.nextInt(20);
             if (backBoard[x][y] != null) {
                 i--;
             } else {
-                backBoard[x][y] = new Bugs();
+            	noOfBugs++;
+                backBoard[x][y] = new Bugs("Bug"+noOfBugs);
+                bugsArray.add((Bugs)backBoard[x][y]);
             }
         }
-        noOfBugs = 5;
+        
 
         tempX = 0;
         tempY = 0;
@@ -100,27 +106,18 @@ public class Game {
             }
         }
         System.out.println("Check starve done");
-    }
-    /**************************************************************************/
-    //CATEGORY : STARVATION
-    //Starve
-    public void starve(int this_x, int this_y){
-        if(backBoard[this_x][this_y] instanceof Bugs)
+        System.out.println("Check bug starve status.");
+        for(int i = 0 ; i < bugsArray.size() ; i++)
         {
-            if (((Bugs)backBoard[this_x][this_y]).isStarving()) {
-                backBoard[this_x][this_y] = null;
-                noOfBugs--;
-                System.out.println("Bug is dead");
-            }
+        	System.out.println(bugsArray.get(i).name+" Kills "+bugsArray.get(i).getAntsKill());
+        	System.out.println(bugsArray.get(i).name+" Starve "+bugsArray.get(i).getStarveRound());
         }
-
+        System.out.println(round);
+        System.out.println(noOfAnts);
+        System.out.println(noOfBugs);
+        System.out.println("Round End");
     }
 
-    /**************************************************************************/
-
-    //CATEGORY : MOVE
-
-    //check for ants
     public void checkPrey(int x,int y){
         if(backBoard[x][y].checkMovement(x, y, x+1, y)){
             if(backBoard[x+1][y] instanceof Ants){
@@ -130,163 +127,78 @@ public class Game {
                 System.out.println("Bugs eat down");
                 move(x,y,tempX,tempY);
                 ((Bugs) backBoard[tempX][tempY]).moved = true;
+                ((Bugs)backBoard[tempX][tempY]).plusAntsKill();
                 noOfAnts--;
             }
-        }
-        else if(backBoard[x][y].checkMovement(x, y, x-1, y)){
-            if(backBoard[x-1][y] instanceof Ants){
-                tempX = x-1;
-                tempY = y;
-                ((Bugs)backBoard[x][y]).starveRound = 0;
-                System.out.println("Bugs eat up");
-                move(x,y,tempX,tempY);
-                ((Bugs) backBoard[tempX][tempY]).moved = true;
-                noOfAnts--;
-            }
-        }
-        else if(backBoard[x][y].checkMovement(x, y, x, y+1)) {
-            if (backBoard[x][y + 1] instanceof Ants) {
-                tempX = x;
-                tempY = y + 1;
-                ((Bugs) backBoard[x][y]).starveRound = 0;
-                System.out.println("Bugs eat right");
-                move(x,y,tempX,tempY);
-                ((Bugs) backBoard[tempX][tempY]).moved = true;
-                noOfAnts--;
-            }
-        }
-        else if(backBoard[x][y].checkMovement(x, y, x, y-1)) {
-             if (backBoard[x][y - 1] instanceof Ants) {
-                tempX = x;
-                tempY = y - 1;
-                ((Bugs) backBoard[x][y]).starveRound = 0;
-                 System.out.println("Bugs eat left");
-                 move(x,y,tempX,tempY);
-                 ((Bugs) backBoard[tempX][tempY]).moved = true;
-                noOfAnts--;
-            }
-        }
-        else if(backBoard[x][y].checkMovement(x, y, x+random.nextInt(2)-1, y+random.nextInt(2)-1)){
-            tempX = x+random.nextInt(2)-1;
-            tempY = y+random.nextInt(2)-1;
-            if(backBoard[tempY][tempY] == null) {
-                ((Bugs)backBoard[x][y]).starveRound++;
-                System.out.println("bug moved to null");
-                move(x,y,tempX,tempY);
-                ((Bugs) backBoard[tempX][tempY]).moved = true;
-            }
-            else{
-                System.out.println("Bugs stay same place");
-                ((Bugs)backBoard[x][y]).starveRound++;
-            }
-        }
-
-    }
-
-
-    //ants movement
-    public void AntsMove() {
-        int noOfMovedAnts = 0;
-        while (noOfMovedAnts < noOfAnts) {
-                for(int y = 0; y < 20; y++){
-                    for(int x = 0; x< 20; x++) {
-                        if (backBoard[x][y] instanceof Ants) {
-                            if (!((Ants) backBoard[x][y]).moved) {
-                                tempX = x + random.nextInt(2) - 1;
-                                tempY = y + random.nextInt(2) - 1;
-
-                                if (backBoard[x][y].checkMovement(x, y, tempX, tempY)) {
-                                    if (backBoard[tempX][tempY] == null) {
-
-                                            move(x, y, tempX, tempY);
-                                            ((Ants) backBoard[tempX][tempY]).moved = true;
-
-                                    }
+            else if(backBoard[x][y].checkMovement(x, y, x-1, y)){
+                if(backBoard[x-1][y] instanceof Ants){
+                    tempX = x-1;
+                    tempY = y;
+                    ((Bugs)backBoard[x][y]).starveRound = 0;
+                    System.out.println("Bugs eat up");
+                    move(x,y,tempX,tempY);
+                    ((Bugs) backBoard[tempX][tempY]).moved = true;
+                    ((Bugs)backBoard[tempX][tempY]).plusAntsKill();
+                    noOfAnts--;
+                }
+                else if(backBoard[x][y].checkMovement(x, y, x, y+1)) {
+                    if (backBoard[x][y + 1] instanceof Ants) {
+                        tempX = x;
+                        tempY = y + 1;
+                        ((Bugs) backBoard[x][y]).starveRound = 0;
+                        System.out.println("Bugs eat right");
+                        move(x,y,tempX,tempY);
+                        ((Bugs) backBoard[tempX][tempY]).moved = true;
+                        ((Bugs)backBoard[tempX][tempY]).plusAntsKill();
+                        noOfAnts--;
+                    }
+                    else if(backBoard[x][y].checkMovement(x, y, x, y-1)) {
+                        if (backBoard[x][y - 1] instanceof Ants) {
+                           tempX = x;
+                           tempY = y - 1;
+                           ((Bugs) backBoard[x][y]).starveRound = 0;
+                            System.out.println("Bugs eat left");
+                            move(x,y,tempX,tempY);
+                            ((Bugs) backBoard[tempX][tempY]).moved = true;
+                            ((Bugs)backBoard[tempX][tempY]).plusAntsKill();
+                           noOfAnts--;
+                       }
+                        else if(backBoard[x][y].checkMovement(x, y, x, y-1)) {
+                            if (backBoard[x][y - 1] instanceof Ants) {
+                               tempX = x;
+                               tempY = y - 1;
+                               ((Bugs) backBoard[x][y]).starveRound = 0;
+                                System.out.println("Bugs eat left");
+                                move(x,y,tempX,tempY);
+                                ((Bugs) backBoard[tempX][tempY]).moved = true;
+                                ((Bugs)backBoard[tempX][tempY]).plusAntsKill();
+                               noOfAnts--;
+                           }
+                            else if(backBoard[x][y].checkMovement(x, y, x+random.nextInt(2)-1, y+random.nextInt(2)-1)){
+                                tempX = x+random.nextInt(2)-1;
+                                tempY = y+random.nextInt(2)-1;
+                                if(backBoard[tempY][tempY] == null) {
+                                    ((Bugs)backBoard[x][y]).starveRound++;
+                                    System.out.println("bug moved to null");
+                                    move(x,y,tempX,tempY);
+                                    ((Bugs) backBoard[tempX][tempY]).moved = true;
                                 }
-
-
-                                noOfMovedAnts++;
+                                else{
+                                    System.out.println("Bugs stay same place");
+                                    ((Bugs)backBoard[x][y]).starveRound++;
+                                }
                             }
-                        }
-                    }
-                }
-
-        }
-    }
-
-    //Move
-    public void move(int current_x, int current_y, int next_x, int next_y){
-        backBoard[next_x][next_y] = backBoard[current_x][current_y];
-        backBoard[current_x][current_y]= null;
-    }
-
-
-    /**************************************************************************/
-    //CATEGORY : BREED
-    //breed
-    public void antsBreed(){
-        Ants temp = new Ants();
-        backBoard[tempX][tempY] = temp;
-        backBoard[tempX][tempY].newBreed = true;
-    }
-    public void bugsBreed(){
-        backBoard[tempX][tempY] = new Bugs();
-        backBoard[tempX][tempY].newBreed = true;
-    }
-
-    //get location
-    public static void getLocation(int x, int y){
-        tempX = x;
-        tempY = y;
-    }
-
-    //for ant to breed
-    public void antBreeding(){
-        for(int y = 0; y < 20; y++) {
-            for (int x = 0; x < 20; x++) {
-                if(backBoard[x][y] instanceof Ants){
-                    if(!backBoard[x][y].newBreed) {
-                        if (backBoard[x][y].checkBreed(x, y, backBoard) != null) {
-                            tempX = backBoard[x][y].checkBreed(x, y, backBoard).getCoor_x();
-                            tempY = backBoard[x][y].checkBreed(x, y, backBoard).getCoor_y();
-                            noOfAnts++;
-                            antsBreed();
-                        }
-                    }
+                       }
+                   }
                 }
             }
         }
-    }
+        
+        
+        
+        
 
-    //for bug to breed
-    public void bugBreeding(){
-        for(int y = 0; y < 20; y++) {
-            for (int x = 0; x < 20; x++) {
-                if(backBoard[x][y] instanceof Bugs){
-                    if(!backBoard[x][y].newBreed) {
-                        if (backBoard[x][y].checkBreed(x, y, backBoard) != null) {
-                            tempX = backBoard[x][y].checkBreed(x, y, backBoard).getCoor_x();
-                            tempY = backBoard[x][y].checkBreed(x, y, backBoard).getCoor_y();
-                            noOfBugs++;
-                            bugsBreed();
-                        }
-                    }
-                }
-            }
-        }
     }
-
-    public void resetBreed(){
-        for(int y = 0; y < 20; y++) {
-            for (int x = 0; x < 20; x++) {
-                if(backBoard[x][y] != null){
-                    backBoard[x][y].newBreed = false;
-                }
-            }
-        }
-    }
-
-    /**************************************************************************/
 
 
     //CATEGORY : CONNECTOR
