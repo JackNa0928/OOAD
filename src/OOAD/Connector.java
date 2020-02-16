@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Connector {
 
@@ -47,15 +49,9 @@ public class Connector {
             gui.counter = 0;
             gui.counter++;
             gui.startBtn.setEnabled(false);
-            getArray(game.backBoard);
+            setLabelIcon();
+            gui.getLabel().setText ( "    Round : "+ gui.counter );
             System.out.println("last row in start button actionlistener");
-            for(int y=0;y<20;y++){
-                for(int x=0;x<20;x++){
-                    gui.btn[x][y]= new JLabel();
-                    gui.btn[x][y].setBackground(Color.gray);
-                    gui.frame.add(gui.btn[x][y]);
-                }
-            }
         }
     };
     ActionListener enterBtnKeyListener = new ActionListener() {
@@ -68,20 +64,60 @@ public class Connector {
              //   gui.entBtn.doClick();
                 gui.counter++;
                 game.gameFlow();
-                getArray(game.backBoard);
-          //  System.out.println("last row in enter button actionlistener");
-                for(int y=0;y<20;y++){
-                    for(int x=0;x<20;x++){
-                        gui.btn[x][y]= new JLabel();
-                        gui.btn[x][y].setBackground(Color.gray);
-                        gui.frame.add(gui.btn[x][y]);
-                    }
-                }
-            //}
+                setLabelIcon();
+                checkSimulation();
+                gui.getLabel().setText ( "    Round : "+ gui.counter );
         }
+
+
     };  //get 2d array and set Icon
-    public void getArray(Organism[][] backBoard){
-        //System.out.println("getArray first line");
+
+    public void checkSimulation(){
+        if(game.getArrayListBugs().size() == 0 || game.getArrayListAnts().size() == 0){
+            gui.entBtn.setEnabled(false);
+            gui.startBtn.setEnabled(true);
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Simulation Over!");
+        }
+    }
+
+    public void setLabelIcon(){
+        for(int y= 0; y< 20 ; y++){
+            for(int x= 0; x< 20 ; x++){
+                gui.btn[x][y].setIcon(null);
+            }
+        }
+        for(int i = 0; i < game.getArrayListAnts().size() ; i++){
+            try {
+                Image img = ImageIO.read(getClass().getResource("ant.png"));
+                gui.btn[game.getArrayListAnts().get(i).getLocation().getCoor_x()][game.
+                        getArrayListAnts().get(i).getLocation().getCoor_y()].setIcon(new ImageIcon(img));
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+        for(int i = 0; i < game.getArrayListBugs().size() ; i++){
+            try {
+                Image img = ImageIO.read(getClass().getResource("bug.png"));
+                gui.btn[game.getArrayListBugs().get(i).getLocation().getCoor_x()][game.
+                        getArrayListBugs().get(i).getLocation().getCoor_y()].setIcon(new ImageIcon(img));
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+
+
+    public static void main(String[] args){
+        new Connector();
+    }
+
+
+}
+
+/*
+ //System.out.println("getArray first line");
         for (int y = 0; y < 20; y++){
             for(int x = 0; x < 20; x++){
                 //System.out.println("getArray inside loop");
@@ -111,12 +147,4 @@ public class Connector {
                 }
             }
         }
-    }
-
-    public static void main(String[] args){
-        new Connector();
-    }
-
-}
-
-
+ */

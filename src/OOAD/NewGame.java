@@ -1,6 +1,6 @@
 package OOAD;
 
-import java.util.ArrayList;
+import  java.util.ArrayList;
 import java.util.Random;
 
 public class NewGame {
@@ -13,6 +13,14 @@ public class NewGame {
 
 	private boolean game_End = false;
 	private Random random = new Random();
+
+	public ArrayList<Ants> getArrayListAnts(){
+		return antsArray;
+	}
+
+	public ArrayList<Bugs> getArrayListBugs(){
+		return bugsArray;
+	}
 
 	NewGame() {
 		Random random = new Random();
@@ -168,7 +176,7 @@ public class NewGame {
 					((Bugs) backBoard[tempLocA.getCoor_x()][tempLocA.getCoor_y()]).getLocation()
 							.setCoor_x(tempLocA.getCoor_x());
 					((Bugs) backBoard[tempLocA.getCoor_x()][tempLocA.getCoor_y()]).getLocation()
-							.setCoor_x(tempLocA.getCoor_y());
+							.setCoor_y(tempLocA.getCoor_y());
 					((Bugs) backBoard[tempLocA.getCoor_x()][tempLocA.getCoor_y()]).setMoved(true);
 					bugsArray.get(i).setMoved(true);
 					bugsArray.get(i).getLocation().setCoor_x(tempLocA.getCoor_x());
@@ -187,7 +195,7 @@ public class NewGame {
 					((Bugs) backBoard[tempLocB.getCoor_x()][tempLocB.getCoor_y()]).getLocation()
 							.setCoor_x(tempLocB.getCoor_x());
 					((Bugs) backBoard[tempLocB.getCoor_x()][tempLocB.getCoor_y()]).getLocation()
-							.setCoor_x(tempLocB.getCoor_y());
+							.setCoor_y(tempLocB.getCoor_y());
 					((Bugs) backBoard[tempLocB.getCoor_x()][tempLocB.getCoor_y()]).setMoved(true);
 					bugsArray.get(i).setMoved(true);
 					bugsArray.get(i).getLocation().setCoor_x(tempLocB.getCoor_x());
@@ -207,7 +215,7 @@ public class NewGame {
 					((Bugs) backBoard[tempLocC.getCoor_x()][tempLocC.getCoor_y()]).getLocation()
 							.setCoor_x(tempLocC.getCoor_x());
 					((Bugs) backBoard[tempLocC.getCoor_x()][tempLocC.getCoor_y()]).getLocation()
-							.setCoor_x(tempLocC.getCoor_y());
+							.setCoor_y(tempLocC.getCoor_y());
 					((Bugs) backBoard[tempLocC.getCoor_x()][tempLocC.getCoor_y()]).setMoved(true);
 					bugsArray.get(i).setMoved(true);
 					bugsArray.get(i).getLocation().setCoor_x(tempLocC.getCoor_x());
@@ -227,7 +235,7 @@ public class NewGame {
 					((Bugs) backBoard[tempLocD.getCoor_x()][tempLocD.getCoor_y()]).getLocation()
 							.setCoor_x(tempLocD.getCoor_x());
 					((Bugs) backBoard[tempLocD.getCoor_x()][tempLocD.getCoor_y()]).getLocation()
-							.setCoor_x(tempLocD.getCoor_y());
+							.setCoor_y(tempLocD.getCoor_y());
 					((Bugs) backBoard[tempLocD.getCoor_x()][tempLocD.getCoor_y()]).setMoved(true);
 					bugsArray.get(i).setMoved(true);
 					bugsArray.get(i).getLocation().setCoor_x(tempLocD.getCoor_x());
@@ -246,7 +254,7 @@ public class NewGame {
 						((Bugs) backBoard[tempLocE.getCoor_x()][tempLocE.getCoor_y()]).getLocation()
 								.setCoor_x(tempLocE.getCoor_x());
 						((Bugs) backBoard[tempLocE.getCoor_x()][tempLocE.getCoor_y()]).getLocation()
-								.setCoor_x(tempLocE.getCoor_y());
+								.setCoor_y(tempLocE.getCoor_y());
 						((Bugs) backBoard[tempLocE.getCoor_x()][tempLocE.getCoor_y()]).setMoved(true);
 						bugsArray.get(i).setMoved(true);
 						bugsArray.get(i).getLocation().setCoor_x(tempLocE.getCoor_x());

@@ -18,6 +18,7 @@ public class GUI {
   public JButton startBtn = new JButton ("START"); //start btn
   public JButton entBtn = new JButton();
 
+  private JLabel label =new JLabel();
 
   public GUI(){
     //panel board
@@ -31,11 +32,10 @@ public class GUI {
 
 
 
-    JLabel label =new JLabel();
     label.setText ( "    Round : "+ counter );
     topBoard.add(startBtn, BorderLayout.WEST);
     topBoard.add(label, BorderLayout.CENTER);
-    topBoard.add(entBtn, BorderLayout.CENTER);
+    topBoard.add(entBtn, BorderLayout.EAST);
 
 
     JPanel gameBoard = new JPanel(new GridLayout(20,20));
@@ -68,7 +68,9 @@ public class GUI {
       startBtn.addActionListener(MyActionListener);
       entBtn.addActionListener(MyKeyListener);
     }
-
+    public JLabel getLabel(){
+      return label;
+    }
 
 
 }
